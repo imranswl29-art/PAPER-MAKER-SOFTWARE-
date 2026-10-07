@@ -1,0 +1,53 @@
+{
+  "entities": {
+    "Account": {
+      "title": "Account",
+      "description": "User account for school or central administrator",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "username": { "type": "string", "maxLength": 128 },
+        "password": { "type": "string", "maxLength": 128 },
+        "role": { "type": "string", "enum": ["admin", "principal", "teacher"] },
+        "name": { "type": "string", "maxLength": 200 },
+        "schoolName": { "type": "string", "maxLength": 300 },
+        "campusName": { "type": "string", "maxLength": 300 },
+        "phone": { "type": "string", "maxLength": 50 },
+        "city": { "type": "string", "maxLength": 100 },
+        "targetBoard": { "type": "string", "maxLength": 100 },
+        "status": { "type": "string", "enum": ["active", "suspended"] },
+        "expiryDate": { "type": "string", "maxLength": 50 },
+        "paperLimit": { "type": "number" },
+        "papersCreated": { "type": "number" },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "logoUrl": { "type": "string" },
+        "activeBranchId": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["id", "username", "password", "role", "name", "schoolName", "status"]
+    },
+    "Paper": {
+      "title": "Paper",
+      "description": "Generated examination paper record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "createdByUserId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "languageMode": { "type": "string", "maxLength": 50 },
+        "difficulty": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/accounts/{accountId}": {
+      "schema": { "$ref": "#/entities/Account" },
+      "description": "Registered institutional and administrative user accounts"
+    },
+    "/papers/{paperId}": {
+      "schema": { "$ref": "#/entities/Paper" },
+      "description": "Saved examination papers created by schools or admin"
+    }
+  }
+}

@@ -4,6 +4,15 @@ import { PTBB_SUBJECTS } from './data/ptbbData';
 import { INITIAL_ACCOUNTS } from './data/initialAccounts';
 import { GeneratedExamPaper, ClassLevel } from './types/paper';
 import { UserAccount } from './types/user';
+import {
+  fetchAccountsFromFirestore,
+  saveAccountToFirestore,
+  saveAllAccountsToFirestore,
+  deleteAccountFromFirestore,
+  fetchPapersFromFirestore,
+  savePaperToFirestore,
+  deletePaperFromFirestore,
+} from './firebase';
 
 // Components
 import { NavigationSidebar, ActiveNavTab } from './components/NavigationSidebar';
@@ -77,17 +86,18 @@ export default function App() {
     return null;
   });
 
-  // Fetch accounts from backend on mount and sync with localStorage
+  // Fetch accounts from Firebase Firestore on mount (with Express/localStorage backup)
   useEffect(() => {
-    fetch('/api/accounts')
-      .then((res) => res.json())
-      .then((serverAccounts) => {
-        if (Array.isArray(serverAccounts) && serverAccounts.length > 0) {
+    fetchAccountsFromFirestore()
+      .then((cloudAccounts) => {
+        if (Array.isArray(cloudAccounts) && cloudAccounts.length > 0) {
           setAccounts((prev) => {
             const mergedMap = new Map<string, UserAccount>();
-            // Add server accounts
-            serverAccounts.forEach((acc: UserAccount) => mergedMap.set(acc.id, acc));
-            // Add local accounts if they don't exist on server
+            // Ensure default initial accounts (Admin & Seeded Demo Schools) always exist
+            INITIAL_ACCOUNTS.forEach((acc) => mergedMap.set(acc.id, acc));
+            // Add cloud accounts from Firestore
+            cloudAccounts.forEach((acc: UserAccount) => mergedMap.set(acc.id, acc));
+            // Add any local accounts not yet in cloud
             prev.forEach((acc) => {
               if (!mergedMap.has(acc.id)) {
                 mergedMap.set(acc.id, acc);
@@ -97,17 +107,43 @@ export default function App() {
             localStorage.setItem('ptbb_accounts_list', JSON.stringify(merged));
             return merged;
           });
+        } else {
+          // First time cloud initialization: Seed default accounts to Firebase Firestore
+          saveAllAccountsToFirestore(INITIAL_ACCOUNTS).catch(() => {});
         }
       })
       .catch((err) => {
-        console.warn('Backend accounts sync fallback to localStorage:', err);
+        console.warn('Firebase Firestore accounts fetch fallback:', err);
+        // Fallback to Express backend if Firestore is temporarily offline
+        fetch('/api/accounts')
+          .then((res) => res.json())
+          .then((serverAccounts) => {
+            if (Array.isArray(serverAccounts) && serverAccounts.length > 0) {
+              setAccounts((prev) => {
+                const mergedMap = new Map<string, UserAccount>();
+                serverAccounts.forEach((acc: UserAccount) => mergedMap.set(acc.id, acc));
+                prev.forEach((acc) => {
+                  if (!mergedMap.has(acc.id)) mergedMap.set(acc.id, acc);
+                });
+                const merged = Array.from(mergedMap.values());
+                localStorage.setItem('ptbb_accounts_list', JSON.stringify(merged));
+                return merged;
+              });
+            }
+          })
+          .catch(() => {});
       });
   }, []);
 
-  // Sync accounts to both localStorage and backend
+  // Sync accounts to Firebase Firestore (permanent cloud database), localStorage, and backend
   const syncAccounts = (updatedAccounts: UserAccount[]) => {
     setAccounts(updatedAccounts);
     localStorage.setItem('ptbb_accounts_list', JSON.stringify(updatedAccounts));
+    // Save to Firebase Firestore cloud database
+    saveAllAccountsToFirestore(updatedAccounts).catch((err) =>
+      console.warn('Firebase Firestore accounts batch save failed:', err)
+    );
+    // Also sync to local server API
     fetch('/api/accounts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -141,7 +177,7 @@ export default function App() {
     return [];
   });
 
-  // Load user-specific papers whenever currentUser changes
+  // Load user-specific papers from Firebase Firestore whenever currentUser changes
   useEffect(() => {
     if (currentUser) {
       // Restore cached profile if available
@@ -155,26 +191,36 @@ export default function App() {
         }
       } catch (e) {}
 
-      // Fetch user-specific papers from backend
-      fetch(`/api/papers?userId=${encodeURIComponent(currentUser.id)}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (Array.isArray(data)) {
-            setSavedPapers(data);
-            localStorage.setItem(`ptbb_saved_papers_${currentUser.id}`, JSON.stringify(data));
+      // Fetch user-specific papers from Firebase Firestore
+      fetchPapersFromFirestore(currentUser.id)
+        .then((cloudPapers) => {
+          if (Array.isArray(cloudPapers)) {
+            setSavedPapers(cloudPapers);
+            localStorage.setItem(`ptbb_saved_papers_${currentUser.id}`, JSON.stringify(cloudPapers));
           }
         })
         .catch(() => {
-          const saved = localStorage.getItem(`ptbb_saved_papers_${currentUser.id}`);
-          if (saved) {
-            try {
-              setSavedPapers(JSON.parse(saved));
-            } catch (e) {
-              setSavedPapers([]);
-            }
-          } else {
-            setSavedPapers([]);
-          }
+          // Fallback to Express backend or localStorage
+          fetch(`/api/papers?userId=${encodeURIComponent(currentUser.id)}`)
+            .then((res) => res.json())
+            .then((data) => {
+              if (Array.isArray(data)) {
+                setSavedPapers(data);
+                localStorage.setItem(`ptbb_saved_papers_${currentUser.id}`, JSON.stringify(data));
+              }
+            })
+            .catch(() => {
+              const saved = localStorage.getItem(`ptbb_saved_papers_${currentUser.id}`);
+              if (saved) {
+                try {
+                  setSavedPapers(JSON.parse(saved));
+                } catch (e) {
+                  setSavedPapers([]);
+                }
+              } else {
+                setSavedPapers([]);
+              }
+            });
         });
     } else {
       setSavedPapers([]);
@@ -304,7 +350,12 @@ export default function App() {
       syncAccounts(updatedAccounts);
     }
 
-    // Persist to backend server API
+    // Persist to Firebase Firestore cloud database
+    savePaperToFirestore(paperWithUser).catch((err) =>
+      console.warn('Firebase Firestore paper save failed:', err)
+    );
+
+    // Also persist to backend server API
     fetch('/api/papers', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -313,7 +364,7 @@ export default function App() {
 
     setIsLoginModalOpen(false);
     setViewingPaperDetail(true);
-    showToast('Question paper generated successfully!');
+    showToast('Question paper generated successfully and saved to cloud!');
   };
 
   const handleUpdateActivePaper = (updated: GeneratedExamPaper) => {
@@ -323,6 +374,10 @@ export default function App() {
     if (currentUser) {
       localStorage.setItem(`ptbb_saved_papers_${currentUser.id}`, JSON.stringify(updatedList));
     }
+    // Update in Firebase Firestore cloud database
+    savePaperToFirestore(updated).catch((err) =>
+      console.warn('Firebase Firestore paper update failed:', err)
+    );
     // Update on backend
     fetch('/api/papers', {
       method: 'POST',
@@ -342,6 +397,10 @@ export default function App() {
         setActivePaper(updated[0]);
       }
     }
+    // Delete from Firebase Firestore cloud database
+    deletePaperFromFirestore(paperId).catch((err) =>
+      console.warn('Firebase Firestore paper delete failed:', err)
+    );
     // Delete from backend API
     fetch(`/api/papers/${encodeURIComponent(paperId)}`, { method: 'DELETE' }).catch((err) =>
       console.warn('Backend paper delete failed:', err)

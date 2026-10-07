@@ -6,6 +6,7 @@ import {
 import { PUNJAB_BOARDS } from '../data/ptbbData';
 import { ClassLevel } from '../types/paper';
 import { getPrincipalPortalLink } from '../utils/publicUrl';
+import { deleteAccountFromFirestore } from '../firebase';
 import {
   ShieldAlert,
   Users,
@@ -130,6 +131,9 @@ export const AdminPortalModal: React.FC<AdminPortalModalProps> = ({
     }
     if (confirm('Are you sure you want to delete this school account?')) {
       const updated = accounts.filter((a) => a.id !== id);
+      deleteAccountFromFirestore(id).catch((err) =>
+        console.warn('Failed to delete account from Firestore:', err)
+      );
       onUpdateAccounts(updated);
     }
   };
@@ -223,6 +227,9 @@ Software Engineering & Operations: MUHAMMAD IMRAN KHAN (MSc Computer Science)
                 </h2>
                 <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono">
                   Master Control
+                </span>
+                <span className="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded font-mono font-bold">
+                  ☁️ Firestore Cloud Synced
                 </span>
               </div>
               <p className="text-xs text-slate-400">
