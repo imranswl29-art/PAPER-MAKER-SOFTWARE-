@@ -152,6 +152,40 @@ export const LoginModal: React.FC<LoginModalProps> = ({
             </button>
           </form>
 
+          {/* Pre-Configured Demo Accounts for Quick Evaluation */}
+          <div className="pt-3 border-t border-slate-200">
+            <div className="text-[11px] font-black uppercase tracking-wider text-slate-500 mb-2 flex items-center justify-between">
+              <span>Quick Demo Accounts:</span>
+              <span className="text-[10px] text-blue-600 font-bold lowercase">one-click fill</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setUsername('pakpattan@smartschool.edu.pk');
+                  setPassword('SmartDemo123');
+                  setError(null);
+                }}
+                className="p-2 text-left bg-blue-50/70 hover:bg-blue-100/80 border border-blue-200 rounded-xl transition cursor-pointer"
+              >
+                <div className="font-extrabold text-[11px] text-blue-950 truncate">The Smart School</div>
+                <div className="text-[10px] text-blue-700 font-medium">Pakpattan Branch</div>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setUsername('okara@knowledgeschool.edu.pk');
+                  setPassword('KnowledgeDemo123');
+                  setError(null);
+                }}
+                className="p-2 text-left bg-indigo-50/70 hover:bg-indigo-100/80 border border-indigo-200 rounded-xl transition cursor-pointer"
+              >
+                <div className="font-extrabold text-[11px] text-indigo-950 truncate">The Knowledge School</div>
+                <div className="text-[10px] text-indigo-700 font-medium">Okara Branch</div>
+              </button>
+            </div>
+          </div>
+
           {/* Support & Developer Contact Details Section */}
           <div className="pt-4 border-t border-slate-200 space-y-2.5">
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1.5 text-slate-700">

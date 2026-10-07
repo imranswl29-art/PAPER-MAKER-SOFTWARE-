@@ -416,6 +416,19 @@ Software Engineering & Operations: MUHAMMAD IMRAN KHAN (MSc Computer Science)
                                 {!isMainAdmin && (
                                   <>
                                     <button
+                                      title="Copy Direct Login Link for this School"
+                                      onClick={() => handleCopyDedicatedLinkOnly(acc)}
+                                      className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                                    >
+                                      {copiedId === `link-${acc.id}` ? (
+                                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                                      ) : (
+                                        <Copy className="w-3.5 h-3.5 text-blue-600" />
+                                      )}
+                                      <span className="text-[10px] font-bold hidden sm:inline">Copy Login Link</span>
+                                    </button>
+
+                                    <button
                                       title="Copy WhatsApp Invitation with Dedicated Link"
                                       onClick={() => handleCopyCredentials(acc)}
                                       className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors text-xs font-semibold flex items-center gap-1 cursor-pointer"

@@ -75,6 +75,8 @@ export interface PaperHeaderInfo {
   customLogoUrl?: string;
   boardPattern: string; // e.g. "BISE Lahore / Punjab Board"
   phone?: string;
+  paperSet?: 'A' | 'B' | 'C' | 'D'; // Multi-set variant (Set A, B, C, D)
+  paperCode?: string; // e.g. "CODE-7121"
   includeBubbleSheet?: boolean; // Toggle whether Bubble Sheet / OMR response grid is attached to exam paper
   studentFields: {
     showRollNo: boolean;

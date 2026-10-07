@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CheckCircle2, Printer, X, Copy, Check, FileDown, Download, Loader2, BookOpen } from 'lucide-react';
+import { CheckCircle2, Printer, X, Copy, Check, FileDown, Download, Loader2, BookOpen, MessageCircle } from 'lucide-react';
 import { GeneratedExamPaper } from '../types/paper';
 import { exportAnswerKeyToPdf } from '../utils/exportPdf';
 import { exportAnswerKeyToWord } from '../utils/exportWord';
@@ -50,6 +50,14 @@ export const AnswerKeyModal: React.FC<AnswerKeyModalProps> = ({ paper, onClose }
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleShareWhatsApp = () => {
+    const mcqSummary = paper.objectiveSection.questions
+      .map((q) => `Q.${q.qNo}: (${q.correctOption})`)
+      .join(', ');
+    const text = `*SOLVED ANSWER KEY*\n*${paper.header.instituteName}*\n${paper.header.classLevel} - ${paper.header.subjectName}\nExam: ${paper.header.examTitle}\nTotal Marks: ${paper.header.totalMarks}\n\n*MCQs Key:* ${mcqSummary}\n\nGenerated with PAPER MAKER SOFTWARE.`;
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   return (
@@ -104,8 +112,17 @@ export const AnswerKeyModal: React.FC<AnswerKeyModalProps> = ({ paper, onClose }
             </button>
 
             <button
-              onClick={handlePrint}
+              onClick={handleShareWhatsApp}
               className="btn-3d btn-3d-emerald flex items-center gap-1.5 px-3 py-1.5 text-white rounded-lg text-xs font-bold cursor-pointer"
+              title="Share Answer Key directly on WhatsApp"
+            >
+              <MessageCircle className="w-3.5 h-3.5" />
+              <span>WhatsApp</span>
+            </button>
+
+            <button
+              onClick={handlePrint}
+              className="btn-3d btn-3d-slate flex items-center gap-1.5 px-3 py-1.5 text-white rounded-lg text-xs font-bold cursor-pointer"
               title="Print Answer Sheet"
             >
               <Printer className="w-3.5 h-3.5" />

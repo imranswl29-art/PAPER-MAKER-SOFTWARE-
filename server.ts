@@ -77,20 +77,72 @@ const DEFAULT_ADMIN_ACCOUNT = {
   createdAt: '2026-01-01T00:00:00.000Z',
 };
 
+const DEFAULT_INITIAL_ACCOUNTS = [
+  DEFAULT_ADMIN_ACCOUNT,
+  {
+    id: 'user-smart-pakpattan',
+    username: 'pakpattan@smartschool.edu.pk',
+    password: 'SmartDemo123',
+    role: 'school',
+    name: 'Principal - The Smart School',
+    schoolName: 'THE SMART SCHOOL PAKPATTAN',
+    campusName: 'Pakpattan Branch (City Campus)',
+    city: 'Pakpattan',
+    phone: '03001234567',
+    targetBoard: 'sahiwal',
+    allowedClasses: ['9th', '10th'],
+    status: 'active',
+    expiryDate: '2030-12-31',
+    paperLimit: 500,
+    papersCreated: 12,
+    createdAt: '2026-01-01T00:00:00.000Z',
+  },
+  {
+    id: 'user-knowledge-okara',
+    username: 'okara@knowledgeschool.edu.pk',
+    password: 'KnowledgeDemo123',
+    role: 'school',
+    name: 'Principal - The Knowledge School',
+    schoolName: 'THE KNOWLEDGE SCHOOL OKARA',
+    campusName: 'Okara Branch (Main Campus)',
+    city: 'Okara',
+    phone: '03149876543',
+    targetBoard: 'sahiwal',
+    allowedClasses: ['9th', '10th'],
+    status: 'active',
+    expiryDate: '2030-12-31',
+    paperLimit: 500,
+    papersCreated: 15,
+    createdAt: '2026-01-01T00:00:00.000Z',
+  },
+];
+
 function readAccountsFromFile(): any[] {
   try {
     if (fs.existsSync(ACCOUNTS_FILE)) {
       const data = fs.readFileSync(ACCOUNTS_FILE, 'utf-8');
       const parsed = JSON.parse(data);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
+        // Ensure default accounts exist
+        let changed = false;
+        const merged = [...parsed];
+        for (const def of DEFAULT_INITIAL_ACCOUNTS) {
+          if (!merged.some((a: any) => a.id === def.id || a.username === def.username)) {
+            merged.push(def);
+            changed = true;
+          }
+        }
+        if (changed) {
+          writeAccountsToFile(merged);
+        }
+        return merged;
       }
     }
   } catch (e) {
     console.error('Error reading accounts file:', e);
   }
-  // Initialize with admin only
-  const initial = [DEFAULT_ADMIN_ACCOUNT];
+  // Initialize with initial accounts
+  const initial = [...DEFAULT_INITIAL_ACCOUNTS];
   try {
     fs.writeFileSync(ACCOUNTS_FILE, JSON.stringify(initial, null, 2), 'utf-8');
   } catch (e) {}

@@ -27,6 +27,7 @@ import {
   Book,
   Loader2,
   Upload,
+  MessageCircle,
 } from 'lucide-react';
 import { exportPaperToWord } from '../utils/exportWord';
 import { exportPaperToPdf } from '../utils/exportPdf';
@@ -132,6 +133,11 @@ export const ExamPaperView: React.FC<ExamPaperViewProps> = ({
     } else {
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
     }
+  };
+
+  const handleShareWhatsApp = () => {
+    const shareText = `*${paper.header.instituteName}*\n${paper.header.classLevel} - ${paper.header.subjectName}\nExam: ${paper.header.examTitle}\nTotal Marks: ${paper.header.totalMarks}\nDate: ${paper.header.dateStr}\n\n*Check or Download the complete Exam Paper & Answer Key online:*\n${window.location.href}\n\n_Official PTBB Examination System_`;
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
   };
 
   const { header, objectiveSection, subjectiveSection, languageMode } = paper;
@@ -355,6 +361,71 @@ export const ExamPaperView: React.FC<ExamPaperViewProps> = ({
     '(vii)', '(viii)', '(ix)', '(x)', '(xi)', '(xii)',
   ];
 
+  // Set Variant Generator (Set A, Set B, Set C) with question & choice shuffling
+  const handleGenerateVariantSet = (targetSet: 'A' | 'B' | 'C') => {
+    const currentSet = paper.header.paperSet || 'A';
+    if (currentSet === targetSet) return;
+
+    // Helper for deterministic shuffle
+    const shuffle = <T,>(array: T[], seedOffset: number): T[] => {
+      const arr = [...array];
+      let seed = (targetSet === 'B' ? 47 : targetSet === 'C' ? 89 : 13) + seedOffset;
+      for (let i = arr.length - 1; i > 0; i--) {
+        seed = (seed * 9301 + 49297) % 233280;
+        const j = Math.floor((seed / 233280) * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    };
+
+    // Shuffle MCQs and re-index
+    const shuffledMCQs = shuffle(paper.objectiveSection.questions, 1).map((q, idx) => {
+      // Shuffle options and re-assign keys A, B, C, D
+      const shuffledOptions = shuffle(q.options, idx + 5);
+      const keys: ('A' | 'B' | 'C' | 'D')[] = ['A', 'B', 'C', 'D'];
+      let newCorrect: 'A' | 'B' | 'C' | 'D' = 'A';
+      const remappedOptions = shuffledOptions.map((opt, oIdx) => {
+        const newKey: 'A' | 'B' | 'C' | 'D' = keys[oIdx] || 'A';
+        if (opt.key === q.correctOption) {
+          newCorrect = newKey;
+        }
+        return { ...opt, key: newKey };
+      });
+      return {
+        ...q,
+        qNo: idx + 1,
+        options: remappedOptions,
+        correctOption: newCorrect,
+      };
+    });
+
+    // Shuffle short questions in each group
+    const shuffledSQs = paper.subjectiveSection.part1_shortQuestions.map((grp, gIdx) => ({
+      ...grp,
+      questions: shuffle(grp.questions, gIdx * 7 + 3).map((sq, sIdx) => ({
+        ...sq,
+        subNo: sIdx + 1,
+      })),
+    }));
+
+    onUpdatePaper({
+      ...paper,
+      header: {
+        ...paper.header,
+        paperSet: targetSet,
+        paperCode: `CODE-${targetSet === 'B' ? '7284' : targetSet === 'C' ? '7392' : '7105'}`,
+      },
+      objectiveSection: {
+        ...paper.objectiveSection,
+        questions: shuffledMCQs,
+      },
+      subjectiveSection: {
+        ...paper.subjectiveSection,
+        part1_shortQuestions: shuffledSQs,
+      },
+    });
+  };
+
   return (
     <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden print:border-none print:shadow-none print:rounded-none max-w-5xl mx-auto my-4 print:my-0 print:mx-0 print:max-w-none print:w-full">
       {/* ===================== CONTROL TOOLBAR (Clean English Only) ===================== */}
@@ -486,6 +557,47 @@ export const ExamPaperView: React.FC<ExamPaperViewProps> = ({
             </button>
           </div>
 
+          {/* Paper Sets (Set A, Set B, Set C) */}
+          <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 shadow-inner">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-1 hidden md:inline">
+              Paper Set:
+            </span>
+            {(['A', 'B', 'C'] as const).map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => handleGenerateVariantSet(s)}
+                className={`btn-3d px-2.5 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
+                  (paper.header.paperSet || 'A') === s
+                    ? 'btn-3d-amber text-slate-950 shadow-md'
+                    : 'text-slate-300 hover:text-white bg-slate-800/80'
+                }`}
+                title={`Generate randomized Set ${s} variant with shuffled questions and choices`}
+              >
+                Set {s}
+              </button>
+            ))}
+          </div>
+
+          {/* Watermark Toggle */}
+          <button
+            type="button"
+            onClick={() =>
+              onUpdatePaper({
+                ...paper,
+                header: { ...paper.header, showWatermark: !paper.header.showWatermark },
+              })
+            }
+            className={`btn-3d flex items-center gap-1 px-3 py-1.5 rounded-xl font-bold cursor-pointer text-xs ${
+              paper.header.showWatermark
+                ? 'btn-3d-blue text-white'
+                : 'btn-3d-slate text-slate-300'
+            }`}
+            title="Toggle subtle watermark on generated exam paper"
+          >
+            <span>Watermark: {paper.header.showWatermark ? 'ON' : 'OFF'}</span>
+          </button>
+
           {/* Upload Monogram button */}
           <input
             ref={logoInputRef}
@@ -566,11 +678,22 @@ export const ExamPaperView: React.FC<ExamPaperViewProps> = ({
 
           <button
             type="button"
+            onClick={handleShareWhatsApp}
+            className="btn-3d btn-3d-emerald flex items-center gap-1.5 px-3.5 py-1.5 text-white rounded-xl font-bold cursor-pointer bg-emerald-600 hover:bg-emerald-500"
+            title="Share directly via WhatsApp with teachers, principals, or groups"
+          >
+            <MessageCircle className="w-3.5 h-3.5 text-white" />
+            <span>Share via WhatsApp</span>
+          </button>
+
+          <button
+            type="button"
             onClick={handleSharePaper}
-            className="btn-3d btn-3d-emerald flex items-center gap-1.5 px-3.5 py-1.5 text-white rounded-xl font-bold cursor-pointer"
+            className="btn-3d btn-3d-slate flex items-center gap-1.5 px-3 py-1.5 text-slate-200 rounded-xl font-bold cursor-pointer"
+            title="Copy or share link via device share"
           >
             <Share2 className="w-3.5 h-3.5" />
-            <span>Share Paper</span>
+            <span>Share</span>
           </button>
 
           {onOpenBubbleSheetModal && (
@@ -618,10 +741,23 @@ export const ExamPaperView: React.FC<ExamPaperViewProps> = ({
       <div id="exam-paper-container" className="p-4 sm:p-5 md:p-6 relative text-slate-900 font-sans bg-white print:p-0 print:m-0 print:w-full">
         {/* Background Watermark */}
         {header.showWatermark && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden z-0 opacity-[0.035]">
-            <div className="text-6xl sm:text-7xl font-black font-serif text-slate-950 -rotate-45 text-center leading-tight uppercase">
-              {header.watermarkText || header.instituteName}
-            </div>
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden z-0 opacity-[0.04]">
+            {header.customLogoUrl ? (
+              <div className="flex flex-col items-center justify-center">
+                <img
+                  src={header.customLogoUrl}
+                  alt="School Watermark"
+                  className="w-72 h-72 object-contain grayscale"
+                />
+                <div className="text-4xl sm:text-5xl font-black font-serif text-slate-950 text-center uppercase tracking-wider mt-3">
+                  {header.watermarkText || header.instituteName}
+                </div>
+              </div>
+            ) : (
+              <div className="text-6xl sm:text-7xl font-black font-serif text-slate-950 -rotate-45 text-center leading-tight uppercase">
+                {header.watermarkText || header.instituteName}
+              </div>
+            )}
           </div>
         )}
 
@@ -666,19 +802,29 @@ export const ExamPaperView: React.FC<ExamPaperViewProps> = ({
                     </div>
                   </div>
 
-                  {/* Right: Roll Number Box (Clean & Simple, NO Paper Code needed) */}
+                  {/* Right: Roll Number Box & Set Identifier */}
                   <div className="flex flex-col items-end gap-1 shrink-0">
-                    <div className="border border-slate-900 p-1 sm:p-1.5 text-left bg-slate-50/80">
-                      <span className="block text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-slate-900 mb-0.5">
-                        Roll Number
-                      </span>
-                      <div className="flex gap-0.5 sm:gap-1">
-                        {[1, 2, 3, 4, 5, 6].map((i) => (
-                          <div
-                            key={i}
-                            className="w-3.5 h-4.5 sm:w-4.5 sm:h-5.5 border border-slate-900 bg-white flex items-center justify-center font-mono font-bold text-[10px] sm:text-xs"
-                          ></div>
-                        ))}
+                    <div className="flex items-center gap-1.5">
+                      <div className="border border-slate-900 bg-slate-950 text-white px-2 py-0.5 text-center rounded-xs shadow-2xs">
+                        <span className="block text-[7px] font-bold uppercase tracking-wider text-amber-300">
+                          SET
+                        </span>
+                        <span className="text-xs sm:text-sm font-black text-white">
+                          {header.paperSet || 'A'}
+                        </span>
+                      </div>
+                      <div className="border border-slate-900 p-1 sm:p-1.5 text-left bg-slate-50/80">
+                        <span className="block text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-slate-900 mb-0.5">
+                          Roll Number
+                        </span>
+                        <div className="flex gap-0.5 sm:gap-1">
+                          {[1, 2, 3, 4, 5, 6].map((i) => (
+                            <div
+                              key={i}
+                              className="w-3.5 h-4.5 sm:w-4.5 sm:h-5.5 border border-slate-900 bg-white flex items-center justify-center font-mono font-bold text-[10px] sm:text-xs"
+                            ></div>
+                          ))}
+                        </div>
                       </div>
                     </div>
                     <div className="text-[9px] sm:text-[10px] font-bold text-slate-700">
@@ -989,8 +1135,18 @@ export const ExamPaperView: React.FC<ExamPaperViewProps> = ({
 
                   {/* Right: Roll Number & Date Box */}
                   <div className="flex flex-col items-end gap-1 shrink-0 text-xs font-bold text-slate-900">
-                    <div className="border border-slate-900 px-2.5 py-1 bg-slate-50/80 text-[11px] whitespace-nowrap">
-                      Roll No: _______________
+                    <div className="flex items-center gap-1.5">
+                      <div className="border border-slate-900 bg-slate-950 text-white px-2 py-0.5 text-center rounded-xs shadow-2xs">
+                        <span className="block text-[7px] font-bold uppercase tracking-wider text-amber-300">
+                          SET
+                        </span>
+                        <span className="text-xs sm:text-sm font-black text-white">
+                          {header.paperSet || 'A'}
+                        </span>
+                      </div>
+                      <div className="border border-slate-900 px-2.5 py-1 bg-slate-50/80 text-[11px] whitespace-nowrap">
+                        Roll No: _______________
+                      </div>
                     </div>
                     <div className="border border-slate-900 px-2.5 py-0.5 bg-slate-100 text-[10px] sm:text-[11px] w-full text-center">
                       Date: {header.dateStr}
