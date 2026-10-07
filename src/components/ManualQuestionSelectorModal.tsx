@@ -1066,7 +1066,7 @@ export const ManualQuestionSelectorModal: React.FC<ManualQuestionSelectorModalPr
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-black text-slate-800 mb-1">
-                      School / Academy Name (پرنٹ ہونے والا نام):
+                      School / Academy Name:
                     </label>
                     <input
                       type="text"
@@ -1090,7 +1090,7 @@ export const ManualQuestionSelectorModal: React.FC<ManualQuestionSelectorModalPr
 
                   <div>
                     <label className="block text-xs font-black text-slate-800 mb-1">
-                      Exam Title (عنوان امتحانی پرچہ):
+                      Exam Title:
                     </label>
                     <input
                       type="text"
@@ -1163,7 +1163,7 @@ export const ManualQuestionSelectorModal: React.FC<ManualQuestionSelectorModalPr
                 <div className="border-t border-slate-200 pt-3">
                   <div className="flex items-center justify-between mb-2">
                     <label className="block text-xs font-black text-slate-800">
-                      Bubble Sheet Option (پیپر پر ببل شیٹ لگانے کا آپشن):
+                      Bubble Sheet Option:
                     </label>
                     <span className="text-[11px] text-slate-500 font-semibold">
                       Select whether to attach the OMR bubble response grid to the paper

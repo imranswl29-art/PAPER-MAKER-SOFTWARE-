@@ -108,6 +108,69 @@ body {
 }
 
 /* ========================================================================= */
+/* HIGH-CONTRAST LEGIBILITY RULES (Eliminates text blending on white background) */
+/* ========================================================================= */
+.bg-white,
+[class*="bg-white"],
+.card-3d,
+#exam-paper-container,
+#answer-key-print-content,
+.omr-bubble-grid-container {
+  color: #0f172a;
+}
+
+/* Ensure secondary text colors on white backgrounds have strong contrast */
+.bg-white .text-slate-400,
+.bg-white .text-slate-500,
+.card-3d .text-slate-400,
+.card-3d .text-slate-500,
+#exam-paper-container .text-slate-400,
+#exam-paper-container .text-slate-500,
+#exam-paper-container .text-slate-600,
+.bg-slate-50 .text-slate-400,
+.bg-slate-50 .text-slate-500 {
+  color: #334155 !important;
+}
+
+.bg-white .text-slate-300,
+.card-3d .text-slate-300,
+#exam-paper-container .text-slate-300,
+.bg-slate-50 .text-slate-300 {
+  color: #475569 !important;
+}
+
+/* Ensure check icons or squares on white backgrounds never fade */
+.bg-white svg.text-slate-300,
+.bg-white svg.text-slate-400,
+.card-3d svg.text-slate-300,
+.card-3d svg.text-slate-400 {
+  color: #64748b !important;
+}
+
+/* Form input, select, textarea high visibility protection */
+input, select, textarea {
+  color: #0f172a !important;
+  background-color: #ffffff;
+  border-color: #94a3b8;
+}
+
+input:focus, select:focus, textarea:focus {
+  color: #0f172a !important;
+  border-color: #2563eb !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+
+/* Fail-safe: Prevent white text on white backgrounds */
+.bg-white > .text-white,
+.card-3d > .text-white {
+  color: #0f172a !important;
+}
+
+/* ========================================================================= */
 /* 3D VISUAL STYLING UTILITIES (Tactile, Elevated, Responsive Depth)         */
 /* ========================================================================= */
 .card-3d {

@@ -147,7 +147,7 @@ export const AnswerKeyModal: React.FC<AnswerKeyModalProps> = ({ paper, onClose }
               {paper.header.instituteName}
             </h2>
             <div className="text-xs sm:text-sm font-black text-indigo-900 uppercase tracking-wide">
-              Official Solved Answer Key & Solution Guidelines (حل شدہ جوابی پرچہ و مارکنگ گائیڈ)
+              Official Solved Answer Key & Solution Guidelines
             </div>
             <div className="text-xs text-slate-700 font-semibold pt-1">
               Class: <strong>{paper.header.classLevel}</strong> &nbsp;|&nbsp; Subject: <strong>{paper.header.subjectName}</strong> &nbsp;|&nbsp; Examination: <strong>{paper.header.examTitle}</strong> &nbsp;|&nbsp; Total Marks: <strong>{paper.header.totalMarks}</strong>

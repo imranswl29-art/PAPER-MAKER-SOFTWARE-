@@ -459,7 +459,7 @@ export const InteractivePaperBuilder: React.FC<InteractivePaperBuilderProps> = (
               title="Automatically select MCQs, Short Questions, and Long Questions strictly according to official board pairing scheme"
             >
               <Sparkles className="w-4 h-4 text-emerald-100" />
-              <span>Auto-Pick Questions (بورڈ پیٹرن آٹو منتخب کریں)</span>
+              <span>Auto-Pick Questions</span>
             </button>
             <button
               type="button"
@@ -475,7 +475,7 @@ export const InteractivePaperBuilder: React.FC<InteractivePaperBuilderProps> = (
         <div className="bg-gradient-to-r from-blue-50/90 via-indigo-50/80 to-slate-50 border border-blue-200 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 shadow-2xs">
           <div className="flex items-center gap-2">
             <span className="text-xs font-black uppercase tracking-wider text-slate-900">
-              Paper Medium (امتحانی میڈیم):
+              Paper Medium:
             </span>
             <span className="text-[11px] text-slate-500 hidden sm:inline">
               Switch anytime between English, Urdu, or Bilingual format
@@ -537,18 +537,18 @@ export const InteractivePaperBuilder: React.FC<InteractivePaperBuilderProps> = (
                     ? 'btn-3d-blue text-white ring-2 ring-blue-400/50 shadow-md'
                     : isCompleted
                     ? 'btn-3d-emerald text-white font-bold shadow-xs'
-                    : 'bg-white border-2 border-slate-300 text-slate-800 hover:bg-slate-100 font-bold'
+                    : 'bg-white border-2 border-slate-300 text-slate-950 hover:bg-slate-100 font-bold'
                 }`}
               >
-                <div className="text-[10px] font-black uppercase flex items-center justify-center gap-1">
+                <div className={`text-[10px] font-black uppercase flex items-center justify-center gap-1 ${isCurrent || isCompleted ? 'text-white' : 'text-slate-900'}`}>
                   <span>Step {s.num}</span>
                   {isCompleted && <CheckCircle2 className="w-3.5 h-3.5 text-white shrink-0" />}
                 </div>
-                <div className="font-extrabold text-xs truncate mt-0.5">{s.title}</div>
+                <div className={`font-black text-xs truncate mt-0.5 ${isCurrent || isCompleted ? 'text-white' : 'text-slate-950'}`}>{s.title}</div>
                 <div
                   className={`text-[9px] ${
-                    isCurrent || isCompleted ? 'text-white/80' : 'text-slate-500'
-                  } font-medium truncate mt-0.5`}
+                    isCurrent || isCompleted ? 'text-white/90' : 'text-slate-700'
+                  } font-bold truncate mt-0.5`}
                 >
                   {s.subtitle}
                 </div>
@@ -628,7 +628,7 @@ export const InteractivePaperBuilder: React.FC<InteractivePaperBuilderProps> = (
                   Select Paper Medium
                 </span>
                 <h3 className="text-base font-black text-slate-900 mt-0.5">
-                  Choose Examination Medium (امتحانی زبان / میڈیم)
+                  Choose Examination Medium
                 </h3>
                 <p className="text-xs text-slate-500">
                   Select whether you want your examination paper in English, Urdu, or Bilingual (Both) format.
@@ -665,12 +665,12 @@ export const InteractivePaperBuilder: React.FC<InteractivePaperBuilderProps> = (
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs font-black text-emerald-700 uppercase font-urdu">اردو</span>
+                    <span className="text-xs font-black text-emerald-700 uppercase">Urdu</span>
                     {languageMode === 'urdu' && <CheckCircle2 className="w-5 h-5 text-emerald-600" />}
                   </div>
-                  <h4 className="font-extrabold text-sm text-slate-900 font-urdu">اردو میڈیم (Urdu)</h4>
+                  <h4 className="font-extrabold text-sm text-slate-900">Urdu Medium</h4>
                   <p className="text-[11px] text-slate-500 mt-1">
-                    سوالات، ہدایات اور معروضی آپشنز مکمل طور پر خوبصورت اردو نستعلیق میں۔
+                    Questions, instructions, and options in Urdu script.
                   </p>
                 </div>
 
@@ -684,7 +684,7 @@ export const InteractivePaperBuilder: React.FC<InteractivePaperBuilderProps> = (
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs font-black text-indigo-700 uppercase">Both / دو لسانی</span>
+                    <span className="text-xs font-black text-indigo-700 uppercase">Bilingual</span>
                     {languageMode === 'bilingual' && <CheckCircle2 className="w-5 h-5 text-indigo-600" />}
                   </div>
                   <h4 className="font-extrabold text-sm text-slate-900">Bilingual (Both)</h4>
@@ -811,7 +811,7 @@ export const InteractivePaperBuilder: React.FC<InteractivePaperBuilderProps> = (
                       {isTicked ? (
                         <CheckSquare className="w-5 h-5 text-blue-600" />
                       ) : (
-                        <Square className="w-5 h-5 text-slate-300" />
+                        <Square className="w-5 h-5 text-slate-500" />
                       )}
                     </div>
                     <div className="flex-1">
@@ -1011,7 +1011,7 @@ export const InteractivePaperBuilder: React.FC<InteractivePaperBuilderProps> = (
                         {isSelected ? (
                           <CheckSquare className="w-5 h-5 text-blue-600" />
                         ) : (
-                          <Square className="w-5 h-5 text-slate-300" />
+                          <Square className="w-5 h-5 text-slate-500" />
                         )}
                       </div>
                       <div className="flex-1 space-y-1">
@@ -1043,11 +1043,11 @@ export const InteractivePaperBuilder: React.FC<InteractivePaperBuilderProps> = (
                           key={opt.key}
                           className={`p-1.5 rounded-md border text-[11px] ${
                             opt.key === m.correctOption
-                              ? 'bg-emerald-50 border-emerald-300 font-bold text-emerald-900'
-                              : 'bg-white border-slate-200 text-slate-700'
+                              ? 'bg-emerald-100 border-emerald-400 font-black text-emerald-950 shadow-2xs'
+                              : 'bg-white border-slate-300 text-slate-950 font-semibold'
                           }`}
                         >
-                          <strong>({opt.key})</strong> {opt.textEn}
+                          <strong className="text-slate-950 font-black">({opt.key})</strong> {opt.textEn}
                         </div>
                       ))}
                     </div>
@@ -1107,7 +1107,7 @@ export const InteractivePaperBuilder: React.FC<InteractivePaperBuilderProps> = (
               <div className="space-y-0.5">
                 <div className="font-extrabold text-xs text-indigo-950 flex items-center gap-1.5">
                   <Sliders className="w-4 h-4 text-indigo-600" />
-                  <span>Student Choice Settings (مختصر سوالات میں چوائس):</span>
+                  <span>Student Choice Settings:</span>
                 </div>
                 <p className="text-[11px] text-indigo-800">
                   Paper instructions will specify attempting any <strong>{shortAttemptChoice}</strong> questions per section group.
@@ -1150,7 +1150,7 @@ export const InteractivePaperBuilder: React.FC<InteractivePaperBuilderProps> = (
                       {isSelected ? (
                         <CheckSquare className="w-5 h-5 text-blue-600" />
                       ) : (
-                        <Square className="w-5 h-5 text-slate-300" />
+                        <Square className="w-5 h-5 text-slate-500" />
                       )}
                     </div>
                     <div className="flex-1 space-y-1">
@@ -1234,7 +1234,7 @@ export const InteractivePaperBuilder: React.FC<InteractivePaperBuilderProps> = (
               <div className="space-y-0.5">
                 <div className="font-extrabold text-xs text-purple-950 flex items-center gap-1.5">
                   <Sliders className="w-4 h-4 text-purple-600" />
-                  <span>Student Choice Settings (تفصیلی سوالات میں چوائس):</span>
+                  <span>Student Choice Settings (Long Questions):</span>
                 </div>
                 <p className="text-[11px] text-purple-800">
                   Paper instructions will specify attempting any <strong>{longAttemptChoice}</strong> long questions out of {selectedLongIds.length}.
@@ -1278,7 +1278,7 @@ export const InteractivePaperBuilder: React.FC<InteractivePaperBuilderProps> = (
                         {isSelected ? (
                           <CheckSquare className="w-5 h-5 text-blue-600" />
                         ) : (
-                          <Square className="w-5 h-5 text-slate-300" />
+                          <Square className="w-5 h-5 text-slate-500" />
                         )}
                         <span className="font-extrabold text-slate-900 text-xs">
                           Long Question #{idx + 5}
@@ -1408,7 +1408,7 @@ export const InteractivePaperBuilder: React.FC<InteractivePaperBuilderProps> = (
               <div className="flex items-center justify-between">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
-                    Selected Paper Medium (امتحانی میڈیم کی تصدیق):
+                    Selected Paper Medium:
                   </label>
                   <p className="text-[11px] text-slate-500">
                     You can switch the examination paper output language here anytime before finalization.
@@ -1568,14 +1568,14 @@ export const InteractivePaperBuilder: React.FC<InteractivePaperBuilderProps> = (
             {/* 3. INSTITUTIONAL HEADER & TITLE SETTINGS */}
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-3">
               <div className="font-bold text-slate-800 uppercase tracking-wider text-[11px] flex items-center justify-between">
-                <span>Institutional Header & School Monogram (سکول کا نام اور مونوگرام)</span>
+                <span>Institutional Header & School Monogram</span>
                 <span className="text-[10px] text-slate-500 font-normal">Appears in a single pristine line at the top of the question paper</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                 <div className="md:col-span-2">
                   <label className="block font-bold text-slate-700 mb-1">
-                    Institute / School Name (ایک ہی لائن میں پرنٹ ہوگا)
+                    Institute / School Name
                   </label>
                   <input
                     type="text"
@@ -1620,7 +1620,7 @@ export const InteractivePaperBuilder: React.FC<InteractivePaperBuilderProps> = (
                 {/* School Monogram / Logo Upload */}
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">
-                    School Monogram / Logo (مونوگرام)
+                    School Monogram / Logo
                   </label>
                   <div className="flex items-center gap-2">
                     <div className="w-10 h-10 rounded-full border-2 border-slate-300 bg-white flex items-center justify-center overflow-hidden shrink-0 shadow-2xs">
@@ -1667,7 +1667,7 @@ export const InteractivePaperBuilder: React.FC<InteractivePaperBuilderProps> = (
             {/* 4. BUBBLE SHEET OPTION - TWO SEPARATE BUTTONS */}
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-3">
               <div className="font-bold text-slate-800 uppercase tracking-wider text-[11px] flex items-center justify-between">
-                <span>Bubble Sheet Option (پیپر پر ببل شیٹ لگانے کا آپشن)</span>
+                <span>Bubble Sheet Option</span>
                 <span className="text-[10px] text-slate-500 font-semibold">Choose whether to attach the OMR bubble response sheet to the question paper</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">

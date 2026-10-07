@@ -862,9 +862,8 @@ export const ExamPaperView: React.FC<ExamPaperViewProps> = ({
                   <div className="flex flex-wrap items-center justify-between border-b border-slate-300 pb-2 gap-2">
                     <div className="flex items-center gap-2">
                       <CircleDot className="w-4 h-4 text-blue-800 shrink-0" />
-                      <h4 className="font-black text-xs uppercase tracking-wider text-slate-900 flex items-center gap-2 flex-wrap">
-                        <span>Official OMR Bubble Response Grid</span>
-                        <span className="font-urdu text-[12px] font-bold text-slate-700" dir="rtl">(امتحانی جوابی ببل شیٹ)</span>
+                      <h4 className="font-black text-xs uppercase tracking-wider text-slate-900">
+                        Official OMR Bubble Response Grid
                       </h4>
                     </div>
                     <span className="text-[10px] text-slate-700 font-semibold shrink-0 bg-white border border-slate-300 px-2 py-0.5 rounded shadow-2xs">

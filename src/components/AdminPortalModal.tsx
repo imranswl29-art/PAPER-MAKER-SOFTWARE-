@@ -409,12 +409,12 @@ Software Engineering & Operations: MUHAMMAD IMRAN KHAN (MSc Computer Science)
                               {acc.status === 'active' ? (
                                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-emerald-100 text-emerald-800 border border-emerald-300">
                                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
-                                  Active (ایکٹو)
+                                  Active
                                 </span>
                               ) : (
                                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-rose-100 text-rose-800 border border-rose-300">
                                   <Lock className="w-2.5 h-2.5 text-rose-600" />
-                                  Frozen (فریز شدہ)
+                                  Frozen
                                 </span>
                               )}
                             </td>

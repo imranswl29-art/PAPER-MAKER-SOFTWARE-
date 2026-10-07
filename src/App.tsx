@@ -938,8 +938,8 @@ export default function App() {
               <h2 className="text-lg font-black uppercase tracking-wide">
                 Account Suspended / Frozen
               </h2>
-              <p className="text-xs text-rose-200 font-urdu" dir="rtl">
-                اکاؤنٹ عارضی طور پر فریز کر دیا گیا ہے
+              <p className="text-xs text-rose-200">
+                Contact administrator to reactivate account access
               </p>
             </div>
 
@@ -958,10 +958,7 @@ export default function App() {
                   Notice from Central Administration:
                 </p>
                 <p className="leading-relaxed">
-                  This school account has been temporarily frozen by the Super Administrator. Access to examination paper generation and question banks is temporarily blocked.
-                </p>
-                <p className="font-urdu text-[13px] leading-relaxed text-right font-medium text-rose-900 pt-1" dir="rtl">
-                  محترم پرنسپل صاحب، آپ کے ادارے کا پورٹل اکاؤنٹ مین ایڈمنسٹریٹر کی طرف سے عارضی طور پر فریز کر دیا گیا ہے۔ مزید پیپرز بنانے یا ڈیٹا بینک تک رسائی کے لیے مین ایڈمن سے فوری رابطہ فرمائیں۔
+                  This school account has been temporarily frozen by the Super Administrator. Access to examination paper generation and question banks is temporarily blocked. Please contact the main administrator to restore access.
                 </p>
               </div>
 

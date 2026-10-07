@@ -142,40 +142,40 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* Metrics Row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="card-3d p-4">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block mb-1">
+          <span className="text-[11px] font-black uppercase tracking-wider text-slate-700 block mb-1">
             Total Papers Created
           </span>
-          <div className="text-2xl font-black text-slate-900">{savedPapers.length}</div>
-          <span className="text-[10px] text-blue-600 font-semibold">Ready to print & export</span>
+          <div className="text-2xl font-black text-slate-950">{savedPapers.length}</div>
+          <span className="text-[11px] text-blue-700 font-bold">Ready to print & export</span>
         </div>
 
         <div className="card-3d p-4">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block mb-1">
+          <span className="text-[11px] font-black uppercase tracking-wider text-slate-700 block mb-1">
             Target Board Pattern
           </span>
-          <div className="text-base font-bold text-slate-900 truncate">
+          <div className="text-base font-bold text-slate-950 truncate">
             {currentUser?.targetBoard ? currentUser.targetBoard.toUpperCase() + ' Board' : 'BISE Punjab'}
           </div>
-          <span className="text-[10px] text-slate-500">PTBB Pairing Scheme</span>
+          <span className="text-[11px] text-slate-700 font-semibold">PTBB Pairing Scheme</span>
         </div>
 
         <div className="card-3d p-4">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block mb-1">
+          <span className="text-[11px] font-black uppercase tracking-wider text-slate-700 block mb-1">
             Active Classes
           </span>
-          <div className="text-base font-bold text-slate-900">9th & 10th Class</div>
-          <span className="text-[10px] text-blue-600 font-semibold">Matric Science Group</span>
+          <div className="text-base font-bold text-slate-950">9th & 10th Class</div>
+          <span className="text-[11px] text-blue-700 font-bold">Matric Science Group</span>
         </div>
 
         <div className="card-3d p-4">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block mb-1">
+          <span className="text-[11px] font-black uppercase tracking-wider text-slate-700 block mb-1">
             System License
           </span>
-          <div className="text-base font-bold text-emerald-600 flex items-center gap-1">
+          <div className="text-base font-bold text-emerald-700 flex items-center gap-1">
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <span>Active</span>
           </div>
-          <span className="text-[10px] text-slate-500">
+          <span className="text-[11px] text-slate-700 font-semibold">
             Valid till {currentUser?.expiryDate || '2027-12-31'}
           </span>
         </div>
@@ -184,10 +184,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* Quick Launch Cards by Class */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-700">
+          <h2 className="text-sm font-extrabold uppercase tracking-wider text-slate-900">
             Fast Paper Generator by Class
           </h2>
-          <span className="text-xs text-slate-500">Select class to start builder</span>
+          <span className="text-xs text-slate-700 font-bold">Select class to start builder</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl">
@@ -214,13 +214,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               className="card-3d overflow-hidden flex flex-col justify-between"
             >
               <div className={`p-4 bg-gradient-to-r ${c.color} text-white`}>
-                <div className="text-xs font-mono font-bold uppercase opacity-80">{c.level} PTBB</div>
+                <div className="text-xs font-mono font-bold uppercase opacity-90">{c.level} PTBB</div>
                 <h3 className="font-extrabold text-base mt-0.5">{c.name}</h3>
-                <div className="text-xs opacity-80 mt-1">{c.subTitle}</div>
+                <div className="text-xs opacity-90 mt-1">{c.subTitle}</div>
               </div>
               <div className="p-4 space-y-3 flex-1 flex flex-col justify-between text-xs">
-                <p className="text-slate-500 text-[11px] leading-relaxed">
-                  <strong>Available Subjects: </strong>{c.subjects}
+                <p className="text-slate-700 text-xs leading-relaxed font-medium">
+                  <strong className="text-slate-900">Available Subjects: </strong>{c.subjects}
                 </p>
                 <button
                   onClick={() => onOpenCreatePaper(c.level)}
@@ -237,10 +237,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
       {/* Recent Generated Papers Section */}
       <div className="card-3d p-5">
-        <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+        <div className="flex items-center justify-between mb-4 border-b border-slate-200 pb-3">
           <div>
-            <h3 className="font-bold text-sm text-slate-900">Recent Generated Question Papers</h3>
-            <p className="text-xs text-slate-500">1-click Print, MS Word download, Answer Key & Bubble Sheet</p>
+            <h3 className="font-black text-sm text-slate-950">Recent Generated Question Papers</h3>
+            <p className="text-xs text-slate-700 font-medium">1-click Print, MS Word download, Answer Key & Bubble Sheet</p>
           </div>
           <button
             onClick={() => onOpenCreatePaper()}
@@ -251,23 +251,23 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
 
         {savedPapers.length > 0 ? (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-slate-200">
             {savedPapers.slice(0, 5).map((p) => (
               <div
                 key={p.id}
-                className="py-3 flex flex-wrap items-center justify-between gap-3 text-xs hover:bg-slate-50/70 p-2 rounded-lg transition-colors"
+                className="py-3 flex flex-wrap items-center justify-between gap-3 text-xs hover:bg-slate-50 p-2 rounded-lg transition-colors"
               >
                 <div>
-                  <div className="font-bold text-slate-900 flex items-center gap-2">
-                    <span>{p.header.subjectName}</span>
-                    <span className="px-2 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px] font-mono font-bold">
+                  <div className="font-extrabold text-slate-950 flex items-center gap-2">
+                    <span className="text-sm">{p.header.subjectName}</span>
+                    <span className="px-2 py-0.5 rounded bg-blue-100 text-blue-900 text-[10px] font-mono font-bold">
                       {p.header.classLevel}
                     </span>
-                    <span className="text-slate-400 font-normal">·</span>
-                    <span className="text-slate-600 font-normal">{p.header.examTitle}</span>
+                    <span className="text-slate-500 font-normal">·</span>
+                    <span className="text-slate-800 font-semibold">{p.header.examTitle}</span>
                   </div>
-                  <div className="text-[11px] text-slate-500 mt-0.5">
-                    {p.header.dateStr} · Total Marks: <strong>{p.header.totalMarks}</strong> · Syllabus: {p.header.syllabusCovered || 'All chapters'}
+                  <div className="text-xs text-slate-700 font-medium mt-0.5">
+                    {p.header.dateStr} · Total Marks: <strong className="text-slate-950">{p.header.totalMarks}</strong> · Syllabus: {p.header.syllabusCovered || 'All chapters'}
                   </div>
                 </div>
 

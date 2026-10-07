@@ -158,25 +158,9 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
                 >
                   {isAdmin ? 'Master Admin' : 'School Principal'}
                 </span>
-                <button
-                  onClick={onLogout}
-                  title="Logout"
-                  className="text-slate-400 hover:text-rose-400 transition-colors"
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                </button>
               </div>
               <div className="font-bold text-xs text-white truncate">{currentUser.name}</div>
               <div className="text-[11px] text-slate-400 truncate">{currentUser.schoolName}</div>
-              <button
-                type="button"
-                onClick={onLogout}
-                className="mt-2.5 w-full flex items-center justify-center gap-1.5 px-2.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-[11px] font-black transition-all shadow-sm cursor-pointer"
-                title="End current session and return to login"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-                <span>Logout (لاگ آؤٹ)</span>
-              </button>
             </div>
           ) : (
             <div className="flex items-center justify-between">

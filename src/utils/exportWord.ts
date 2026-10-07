@@ -437,7 +437,7 @@ export function exportPaperToWord(
       <table width="100%" cellpadding="3" cellspacing="0" border="1" style="border-collapse:collapse; margin-bottom:10pt; border:1.5pt solid #0f172a; background-color:#f8fafc; page-break-inside:avoid;">
         <tr style="background-color:#e2e8f0;">
           <td colspan="4" align="center" style="font-size:9.5pt; font-weight:bold; color:#0f172a; padding:4pt;">
-            OFFICIAL OMR BUBBLE RESPONSE GRID (امتحانی جوابی ببل شیٹ) &bull; Fill completely: &#9679; Correct | &#10006; Incorrect
+            OFFICIAL OMR BUBBLE RESPONSE GRID &bull; Fill completely: &#9679; Correct | &#10006; Incorrect
           </td>
         </tr>
         <tr>
@@ -637,7 +637,7 @@ export function exportAnswerKeyToWord(paper: GeneratedExamPaper) {
         <tr>
           <td align="center" style="padding:10pt; border-bottom:1.5pt solid #0f172a; text-align:center;">
             <div style="font-size:16pt; font-weight:900; text-transform:uppercase; color:#0f172a;">${header.instituteName}</div>
-            <div style="font-size:12pt; font-weight:bold; color:#1e3a8a; margin-top:3pt;">OFFICIAL ANSWER KEY & MARKING SCHEME (حل شدہ جوابی پرچہ)</div>
+            <div style="font-size:12pt; font-weight:bold; color:#1e3a8a; margin-top:3pt;">OFFICIAL ANSWER KEY & MARKING SCHEME</div>
             <div style="font-size:10pt; color:#475569; margin-top:2pt;">${header.classLevel} Class &bull; ${header.subjectName} &bull; ${header.examTitle} &bull; Total Marks: ${header.totalMarks}</div>
           </td>
         </tr>

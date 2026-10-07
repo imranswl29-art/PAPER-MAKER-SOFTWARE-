@@ -521,7 +521,7 @@ export const QuestionBankView: React.FC<QuestionBankViewProps> = ({
 
           {/* Search Box */}
           <div className="relative w-full sm:w-72">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+            <Search className="w-3.5 h-3.5 text-slate-600 absolute left-3 top-2.5" />
             <input
               type="text"
               value={searchQuery}
@@ -530,14 +530,14 @@ export const QuestionBankView: React.FC<QuestionBankViewProps> = ({
                 setCurrentPage(1);
               }}
               placeholder="Search in English or Urdu..."
-              className="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white"
+              className="w-full pl-8 pr-3 py-1.5 border-2 border-slate-300 rounded-lg text-xs font-bold text-slate-950 focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white placeholder:text-slate-500"
             />
           </div>
         </div>
 
         {/* Category Pills */}
         <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
-          <span className="text-slate-400 font-bold uppercase mr-1">Categories:</span>
+          <span className="text-slate-700 font-extrabold uppercase mr-1">Categories:</span>
           {availableCategories.map((cat) => (
             <button
               key={cat}
@@ -546,7 +546,7 @@ export const QuestionBankView: React.FC<QuestionBankViewProps> = ({
               className={`px-2.5 py-1 rounded-md font-bold transition-colors cursor-pointer ${
                 categoryFilter === cat
                   ? 'bg-blue-600 text-white'
-                  : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                  : 'bg-white border-2 border-slate-300 text-slate-800 hover:bg-slate-100'
               }`}
             >
               {cat === 'all' ? 'All Categories' : cat}
